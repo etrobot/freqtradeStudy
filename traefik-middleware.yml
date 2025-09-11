@@ -1,0 +1,39 @@
+# Traefik 中间件配置文件
+# 将此文件放在 Traefik 配置目录中（通常是 /etc/traefik/dynamic/）
+
+http:
+  middlewares:
+    # 安全头中间件
+    secure-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "*"
+        accessControlMaxAge: 100
+        addVaryHeader: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        frameDeny: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+
+    # API 限流中间件
+    api-ratelimit:
+      rateLimit:
+        burst: 100
+        average: 50
+
+    # 认证中间件（可选）
+    api-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$10$..." # 使用 htpasswd 生成密码哈希

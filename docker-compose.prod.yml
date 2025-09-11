@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  signal-server:
+    build: .
+    container_name: freqtrade-signal-server
+    restart: unless-stopped
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./user_data:/app/user_data
+      - ./logs:/app/logs
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.signal-server.rule=Host(`freq.subx.fun`)"
+      - "traefik.http.routers.signal-server.entrypoints=websecure"
+      - "traefik.http.routers.signal-server.tls=true"
+      - "traefik.http.routers.signal-server.tls.certresolver=letsencrypt"
+      - "traefik.http.services.signal-server.loadbalancer.server.port=8000"
+      # 可选：添加中间件
+      - "traefik.http.routers.signal-server.middlewares=secure-headers@file"
+    command: python start_production.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  traefik:
+    external: true
