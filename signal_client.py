@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Optional
 
 class SignalClient:
-    def __init__(self, server_url: str = "http://localhost:8000"):
+    def __init__(self, server_url: str = "http://localhost:6677"):
         self.server_url = server_url.rstrip('/')
     
     def send_signal(self, pair: str, action: str, confidence: float = 0.8,
@@ -76,7 +76,7 @@ class SignalClient:
 
 def main():
     parser = argparse.ArgumentParser(description="交易信号客户端")
-    parser.add_argument("--server", default="http://localhost:8000", help="信号服务器地址")
+    parser.add_argument("--server", default="http://localhost:6677", help="信号服务器地址")
     
     subparsers = parser.add_subparsers(dest="command", help="可用命令")
     

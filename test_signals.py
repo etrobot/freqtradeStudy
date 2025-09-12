@@ -15,7 +15,7 @@ def test_signal_server():
     print("🧪 测试信号服务器连接...")
     
     try:
-        response = requests.get("http://localhost:8000/health", timeout=5)
+        response = requests.get("http://localhost:6677/health", timeout=5)
         if response.status_code == 200:
             print("✅ 信号服务器连接正常")
             return True

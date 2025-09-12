@@ -35,9 +35,9 @@ echo "信号服务器 PID: $SIGNAL_SERVER_PID"
 sleep 3
 
 # 检查信号服务器是否启动成功
-if curl -s http://localhost:8000/health > /dev/null; then
+if curl -s http://localhost:6677/health > /dev/null; then
     echo "✅ 信号服务器启动成功"
-    echo "📊 API文档: http://localhost:8000/docs"
+    echo "📊 API文档: http://localhost:6677/docs"
 else
     echo "❌ 信号服务器启动失败"
     kill $SIGNAL_SERVER_PID 2>/dev/null

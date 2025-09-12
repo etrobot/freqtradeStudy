@@ -184,12 +184,11 @@ async def health_check():
 
 if __name__ == "__main__":
     print("启动交易信号服务器...")
-    print("API文档: http://localhost:8000/docs")
+    print("API文档: http://localhost:6677/docs")
     print("信号文件: user_data/external_signals.json")
     
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8000,
-        reload=True
+        port=6677
     )

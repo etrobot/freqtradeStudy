@@ -6,7 +6,7 @@
       "confidence": 0.85,
       "stop_loss": 42000,
       "take_profit": 48000,
-      "reason": "突破关键阻力位",
+      "reason": "\u7a81\u7834\u5173\u952e\u963b\u529b\u4f4d",
       "source": "technical_analysis"
     }
   ],
@@ -14,9 +14,21 @@
     {
       "timestamp": 1694567890,
       "action": "hold",
-      "confidence": 0.60,
-      "reason": "等待进一步确认",
+      "confidence": 0.6,
+      "reason": "\u7b49\u5f85\u8fdb\u4e00\u6b65\u786e\u8ba4",
       "source": "sentiment_analysis"
+    }
+  ],
+  "BTCUSDT": [
+    {
+      "pair": "BTCUSDT",
+      "action": "buy",
+      "confidence": 0.85,
+      "stop_loss": 42000.0,
+      "take_profit": 48000.0,
+      "reason": "Test signal from integration",
+      "source": "crypto_analysis_test",
+      "timestamp": 1757651950.774855
     }
   ]
 }

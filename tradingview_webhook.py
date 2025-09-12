@@ -14,7 +14,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # 配置
-SIGNAL_SERVER_URL = "http://localhost:8000"
+SIGNAL_SERVER_URL = "http://localhost:6677"
 WEBHOOK_SECRET = "your_webhook_secret_here"  # 用于验证webhook的密钥
 
 @app.route('/webhook/tradingview', methods=['POST'])

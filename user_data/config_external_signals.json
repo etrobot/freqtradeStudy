@@ -68,7 +68,7 @@
         "verbosity": "info",
         "enable_openapi": true,
         "jwt_secret_key": "supersecret",
-        "CORS_origins": ["http://localhost:3000", "http://localhost:8000"],
+        "CORS_origins": ["http://localhost:3000", "http://localhost:6677"],
         "username": "freqtrader",
         "password": "SuperSecurePassword"
     },
