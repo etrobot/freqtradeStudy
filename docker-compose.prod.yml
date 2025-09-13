@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   signal-server:
     build: .
@@ -10,6 +8,8 @@ services:
     volumes:
       - ./user_data:/app/user_data
       - ./logs:/app/logs
+    ports:
+      - "6677:8000"
     networks:
       - traefik
     labels:
@@ -23,10 +23,41 @@ services:
       - "traefik.http.routers.signal-server.middlewares=secure-headers@file"
     command: python start_production.py
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6677/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+
+  # 使用官方 Freqtrade 镜像运行交易机器人（与信号服务器独立）
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable
+    container_name: freqtrade-bot
+    restart: unless-stopped
+    depends_on:
+      signal-server:
+        condition: service_healthy
+    volumes:
+      - ./user_data:/freqtrade/user_data
+    command: >
+      trade --config /freqtrade/user_data/config_external_signals.json
+            --strategy ExternalSignalStrategy
+    environment:
+      - FREQTRADE__API_SERVER__ENABLED=true
+      - FREQTRADE__API_SERVER__LISTEN_IP_ADDRESS=0.0.0.0
+      - FREQTRADE__API_SERVER__LISTEN_PORT=8080
+    ports:
+      - "6678:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freqtrade.rule=Host(`ftui.subx.fun`)"
+      - "traefik.http.routers.freqtrade.entrypoints=websecure"
+      - "traefik.http.routers.freqtrade.tls=true"
+      - "traefik.http.routers.freqtrade.tls.certresolver=letsencrypt"
+      - "traefik.http.services.freqtrade.loadbalancer.server.port=8080"
+      # 可选：添加中间件（如已配置 api-auth@file 可开启 BasicAuth）
+      - "traefik.http.routers.freqtrade.middlewares=secure-headers@file"
+    networks:
+      - traefik
 
 networks:
   traefik:

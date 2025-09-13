@@ -127,7 +127,7 @@ docker-compose -f docker-compose.prod.yml logs
 docker logs traefik
 
 # 检查端口占用
-netstat -tlnp | grep :6677
+netstat -tlnp | grep :8000
 ```
 
 ### SSL证书问题

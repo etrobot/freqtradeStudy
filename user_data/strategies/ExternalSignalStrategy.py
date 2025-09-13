@@ -31,7 +31,8 @@ class ExternalSignalStrategy(IStrategy):
     # 策略基本设置
     INTERFACE_VERSION = 3
     timeframe = '5m'
-    can_short = True
+    process_only_new_candles = False  # 允许在当前K线内根据外部信号立即入场
+    can_short = False
     
     # ROI设置 - 由于依赖外部信号，设置较高的ROI避免过早退出
     minimal_roi = {
@@ -51,8 +52,8 @@ class ExternalSignalStrategy(IStrategy):
     
     # 外部信号配置
     signal_file_path = "user_data/external_signals.json"
-    signal_api_url = None  # 可选：从API获取信号
-    signal_check_interval = 60  # 检查信号的间隔（秒）
+    signal_api_url = "http://localhost:8000"  # 可选：从API获取信号
+    signal_check_interval = 5  # 检查信号的间隔（秒）
     
     def __init__(self, config: dict) -> None:
         super().__init__(config)

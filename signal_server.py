@@ -135,6 +135,7 @@ async def clear_pair_signals(pair: str):
         raise HTTPException(status_code=404, detail=f"No signals found for {pair}")
 
 @app.post("/signals/webhook")
+@app.post("/webhook")
 async def webhook_signal(data: dict):
     """
     Webhook接口，接收来自TradingView等平台的信号
@@ -151,11 +152,15 @@ async def webhook_signal(data: dict):
     """
     try:
         # 转换symbol格式 (BTCUSDT -> BTC/USDT)
-        symbol = data.get('symbol', '').upper()
-        if 'USDT' in symbol:
-            pair = symbol.replace('USDT', '/USDT')
-        elif 'USD' in symbol:
-            pair = symbol.replace('USD', '/USD')
+        raw_symbol = data.get('symbol') or data.get('pair') or ''
+        symbol = str(raw_symbol).upper().strip()
+        # 支持 BTCUSDT / BTC/USD / BTC/USDT 等格式
+        if '/' in symbol:
+            pair = symbol
+        elif symbol.endswith('USDT'):
+            pair = symbol[:-4] + '/USDT'
+        elif symbol.endswith('USD'):
+            pair = symbol[:-3] + '/USD'
         else:
             pair = symbol
         
@@ -184,11 +189,11 @@ async def health_check():
 
 if __name__ == "__main__":
     print("启动交易信号服务器...")
-    print("API文档: http://localhost:6677/docs")
+    print("API文档: http://localhost:8000/docs")
     print("信号文件: user_data/external_signals.json")
     
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=6677
+        port=8000
     )

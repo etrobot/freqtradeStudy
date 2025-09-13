@@ -28,6 +28,24 @@ fi
 echo "🛑 停止现有容器..."
 docker-compose -f docker-compose.prod.yml down || true
 
+# 预拉取基础镜像，避免构建时因网络/速率限制失败
+BASE_IMAGE=$(awk '/^FROM /{print $2; exit}' Dockerfile)
+echo "📦 预拉取基础镜像: ${BASE_IMAGE}"
+PULL_OK=false
+for i in {1..3}; do
+    if docker pull "$BASE_IMAGE"; then
+        PULL_OK=true
+        break
+    fi
+    echo "⚠️ 基础镜像拉取失败，重试 $i/3..."
+    sleep 3
+done
+if [ "$PULL_OK" != true ]; then
+    echo "❌ 无法从 Docker Hub 拉取基础镜像: $BASE_IMAGE"
+    echo "👉 建议: 1) 确认网络可访问 registry-1.docker.io 2) 运行 'docker login' 3) 配置镜像加速器/代理 然后重试"
+    exit 1
+fi
+
 # 构建镜像
 echo "🔨 构建 Docker 镜像..."
 docker-compose -f docker-compose.prod.yml build

@@ -14,7 +14,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # 配置
-SIGNAL_SERVER_URL = "http://localhost:6677"
+SIGNAL_SERVER_URL = "http://localhost:8000"
 WEBHOOK_SECRET = "your_webhook_secret_here"  # 用于验证webhook的密钥
 
 @app.route('/webhook/tradingview', methods=['POST'])
@@ -58,16 +58,19 @@ def tradingview_webhook():
         app.logger.info(f"收到TradingView信号: {data}")
         
         # 解析TradingView数据
-        symbol = data.get('symbol', '').upper()
+        raw_symbol = data.get('symbol') or data.get('pair') or ''
+        symbol = str(raw_symbol).upper().strip()
         action = data.get('action', '').lower()
         price = float(data.get('price', 0))
         message = data.get('message', 'TradingView信号')
-        
+
         # 转换symbol格式
-        if 'USDT' in symbol:
-            pair = symbol.replace('USDT', '/USDT')
-        elif 'USD' in symbol:
-            pair = symbol.replace('USD', '/USD')
+        if '/' in symbol:
+            pair = symbol
+        elif symbol.endswith('USDT'):
+            pair = symbol[:-4] + '/USDT'
+        elif symbol.endswith('USD'):
+            pair = symbol[:-3] + '/USD'
         else:
             pair = symbol
         
