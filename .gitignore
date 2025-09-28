@@ -210,3 +210,5 @@ __marimo__/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+user_data/backtest_results/
+user_data/data/

@@ -1,0 +1,105 @@
+{
+  "max_open_trades": 3,
+  "stake_currency": "USDT",
+  "stake_amount": 100,
+  "tradable_balance_ratio": 0.99,
+  "fiat_display_currency": "USD",
+  "timeframe": "5m",
+  "dry_run": true,
+  "strategy": "PriceActionStrategy",
+  "exchange": {
+    "name": "binance",
+    "key": "${binance_API_KEY}",
+    "secret": "${binance_SECRET}",
+    "ccxt_config": {
+      "enableRateLimit": true,
+      "rateLimit": 200,
+      "timeout": 30000,
+      "recvWindow": 60000,
+      "verbose": false
+    },
+    "ccxt_async_config": {
+      "enableRateLimit": true,
+      "rateLimit": 200,
+      "timeout": 30000,
+      "recvWindow": 60000,
+      "asyncio_loop": null
+    },
+    "retries": 5,
+    "retry_delay": 10,
+    "markets_refresh_interval": 60,
+    "ohlcv_params": {
+      "timeframe": "5m",
+      "limit": 1000
+    },
+    "pair_whitelist": [
+      "BTC/USDT",
+      "ETH/USDT",
+      "SOL/USDT",
+      "AVAX/USDT",
+      "DOGE/USDT",
+      "XRP/USDT"
+    ],
+    "pair_blacklist": [
+      ".*DOWN/.*",
+      ".*UP/.*",
+      ".*BULL/.*",
+      ".*BEAR/.*",
+      ".*HALF/.*",
+      ".*HEDGE/.*"
+    ]
+  },
+  "pairlists": [
+    {
+      "method": "StaticPairList"
+    }
+  ],
+  "pair_blacklist": [],
+  "minimal_roi": {
+    "0": 0.1,
+    "25": 0.05,
+    "50": 0.02,
+    "75": -1
+  },
+  "stoploss": -0.15,
+  "trailing_stop": false,
+  "unfilledtimeout": {
+    "entry": 10,
+    "exit": 30
+  },
+  "entry_pricing": {
+    "price_side": "same",
+    "use_order_book": false,
+    "order_book_top": 1
+  },
+  "exit_pricing": {
+    "price_side": "same",
+    "use_order_book": false,
+    "order_book_top": 1
+  },
+  "telegram": {
+    "enabled": false,
+    "token": "your_telegram_bot_token_here",
+    "chat_id": "your_telegram_chat_id_here"
+  },
+  "api_server": {
+    "enabled": true,
+    "listen_ip_address": "127.0.0.1",
+    "listen_port": 8080,
+    "verbosity": "error",
+    "enable_openapi": false,
+    "jwt_secret_key": "supersecret",
+    "CORS_origins": [],
+    "username": "freqtrader",
+    "password": "SuperSecurePassword",
+    "ws_token": [
+      "LH3V2AzJ_19lVrQEscADb7NRzvxVlRUVmBg9GnV6QAo"
+    ]
+  },
+  "bot_name": "freqtrade",
+  "initial_state": "running",
+  "force_entry_enable": false,
+  "internals": {
+    "process_throttle_secs": 5
+  }
+}
