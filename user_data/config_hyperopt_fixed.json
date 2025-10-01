@@ -35,18 +35,7 @@
     }
   ],
   "pair_blacklist": [],
-  "minimal_roi": {
-    "0": 0.102,
-    "22": 0.025,
-    "60": 0.023,
-    "155": 0
-  },
-  "stoploss": -0.35,
   "trailing_stop": false,
-  "strategy_params": {
-    "trend_analysis_period": 24,
-    "exit_candle_count": 9
-  },
   "unfilledtimeout": {
     "entry": 10,
     "exit": 30

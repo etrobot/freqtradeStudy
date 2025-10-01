@@ -1,0 +1,31 @@
+{
+  "strategy_name": "PriceActionStrategy",
+  "params": {
+    "trailing": {
+      "trailing_stop": false,
+      "trailing_stop_positive": null,
+      "trailing_stop_positive_offset": 0.0,
+      "trailing_only_offset_is_reached": false
+    },
+    "max_open_trades": {
+      "max_open_trades": 3
+    },
+    "buy": {
+      "mean_multiplier": 1.64,
+      "second_half_max_candle_percentage": 0.63
+    },
+    "sell": {},
+    "protection": {},
+    "roi": {
+      "0": 0.102,
+      "22": 0.025,
+      "60": 0.023,
+      "155": 0
+    },
+    "stoploss": {
+      "stoploss": -0.35
+    }
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2025-10-01 15:45:59.715811+00:00"
+}
