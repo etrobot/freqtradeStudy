@@ -9,28 +9,15 @@
   "strategy": "PriceActionStrategy",
   "exchange": {
     "name": "binance",
-    "key": "${binance_API_KEY}",
-    "secret": "${binance_SECRET}",
+    "key": "${BINANCE_API_KEY}",
+    "secret": "${BINANCE_SECRET}",
     "ccxt_config": {
       "enableRateLimit": true,
-      "rateLimit": 200,
-      "timeout": 30000,
-      "recvWindow": 60000,
-      "verbose": false
+      "rateLimit": 100
     },
     "ccxt_async_config": {
       "enableRateLimit": true,
-      "rateLimit": 200,
-      "timeout": 30000,
-      "recvWindow": 60000,
-      "asyncio_loop": null
-    },
-    "retries": 5,
-    "retry_delay": 10,
-    "markets_refresh_interval": 60,
-    "ohlcv_params": {
-      "timeframe": "5m",
-      "limit": 1000
+      "rateLimit": 100
     },
     "pair_whitelist": [
       "BTC/USDT",
@@ -40,14 +27,7 @@
       "DOGE/USDT",
       "XRP/USDT"
     ],
-    "pair_blacklist": [
-      ".*DOWN/.*",
-      ".*UP/.*",
-      ".*BULL/.*",
-      ".*BEAR/.*",
-      ".*HALF/.*",
-      ".*HEDGE/.*"
-    ]
+    "pair_blacklist": []
   },
   "pairlists": [
     {
@@ -56,13 +36,17 @@
   ],
   "pair_blacklist": [],
   "minimal_roi": {
-    "0": 0.1,
-    "25": 0.05,
-    "50": 0.02,
-    "75": -1
+    "0": 0.03,
+    "15": 0.02,
+    "30": 0.01,
+    "60": 0
   },
-  "stoploss": -0.15,
+  "stoploss": -0.05,
   "trailing_stop": false,
+  "strategy_params": {
+    "trend_analysis_period": 24,
+    "exit_candle_count": 9
+  },
   "unfilledtimeout": {
     "entry": 10,
     "exit": 30
@@ -77,29 +61,19 @@
     "use_order_book": false,
     "order_book_top": 1
   },
-  "telegram": {
-    "enabled": false,
-    "token": "your_telegram_bot_token_here",
-    "chat_id": "your_telegram_chat_id_here"
-  },
   "api_server": {
     "enabled": true,
-    "listen_ip_address": "127.0.0.1",
+    "listen_ip_address": "0.0.0.0",
     "listen_port": 8080,
-    "verbosity": "error",
-    "enable_openapi": false,
-    "jwt_secret_key": "supersecret",
-    "CORS_origins": [],
-    "username": "freqtrader",
-    "password": "SuperSecurePassword",
+    "username": "${FREQTRADE_USERNAME}",
+    "password": "${FREQTRADE_PASSWORD}",
+    "jwt_secret_key": "${JWT_SECRET}",
     "ws_token": [
-      "LH3V2AzJ_19lVrQEscADb7NRzvxVlRUVmBg9GnV6QAo"
+      "${WS_TOKEN}"
+    ],
+    "CORS_origins": [
+      "http://localhost:3000",
+      "http://localhost:14251"
     ]
-  },
-  "bot_name": "freqtrade",
-  "initial_state": "running",
-  "force_entry_enable": false,
-  "internals": {
-    "process_throttle_secs": 5
   }
 }

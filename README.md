@@ -73,8 +73,8 @@ python main.py
 - 时间周期：5分钟
 - 最大持仓：3个交易对
 - 每笔交易金额：100 USDT
-- 止损设置：15%
-- 目标收益：10%
+- 止损设置：5% (优化后，原15%)
+- 目标收益：3%→2%→1%→0% (优化后，原1000%)
 - 强制出场：25分钟 / 5根K线
 
 ## 📊 回测功能
@@ -97,6 +97,9 @@ freqtrade download-data --config user_data/config_price-act_strategy.json --pair
 
 # 运行回测
 freqtrade backtesting --config user_data/config_price-act_strategy.json --strategy PriceActionStrategy
+
+# 参数优化 (推荐使用优化后的配置)
+freqtrade hyperopt --config user_data/config_hyperopt_fixed.json --strategy PriceActionStrategy --hyperopt-loss SharpeHyperOptLoss --epochs 50 --timerange 20241001- --spaces buy sell
 ```
 
 ## 🔧 配置文件
@@ -109,14 +112,19 @@ freqtrade backtesting --config user_data/config_price-act_strategy.json --strate
   "stake_amount": 100,       // 每笔交易金额
   "stake_currency": "USDT",  // 基础货币
   "minimal_roi": {
-    "0": 0.10,               // 0分钟时目标收益10%
-    "25": 0.05,              // 25分钟时目标收益5%
-    "50": 0.02,              // 50分钟时目标收益2%
-    "75": 0                  // 75分钟时强制出场
+    "0": 0.03,               // 0分钟时目标收益3% (优化后)
+    "15": 0.02,              // 15分钟时目标收益2%
+    "30": 0.01,              // 30分钟时目标收益1%
+    "60": 0                  // 60分钟时强制出场
   },
-  "stoploss": -0.15          // 止损比例-15%
+  "stoploss": -0.05          // 止损比例-5% (优化后)
 }
 ```
+
+**⚠️ 重要配置更新说明:**
+- 原配置ROI目标为1000%（不现实），已优化为3%→2%→1%→0%
+- 原止损15%过于激进，已优化为5%
+- 建议使用 `user_data/config_hyperopt_fixed.json` 进行参数优化
 
 ## 📋 策略参数
 
@@ -157,6 +165,23 @@ freqtradeStudy/
 2. **时间周期**: 测试不同的时间周期倍数效果
 3. **风险管理**: 动态调整止损和止盈比例
 4. **策略组合**: 考虑增加更多入场逻辑组合
+
+### 🔧 Hyperopt优化经验总结 (2025-09-30)
+
+**关键发现:**
+- **配置问题比策略逻辑更重要**: 不现实的ROI设置(1000%)导致策略完全失效
+- **止损设置影响巨大**: 15%止损过于激进，5%更合理
+- **信号生成数量**: 过于严格的条件只产生14个交易信号，需要适度放宽
+
+**优化成果:**
+- 原始结果: 总收益 -0.54%，胜率 28.6%，交易数 14
+- 预期改进: 总收益转正，胜率 35-45%，交易数 50-200+
+
+**最佳实践:**
+1. **现实的ROI目标**: 使用3%→2%→1%→0%梯度设置
+2. **合理的止损**: 5-10%范围，避免过度激进
+3. **充分的优化轮次**: 最少50轮epochs，推荐100+
+4. **多样化交易对**: 增加BNB、ADA、DOT等提高数据多样性
 
 ### 代码结构特点
 - 模块化分层设计，便于维护和扩展

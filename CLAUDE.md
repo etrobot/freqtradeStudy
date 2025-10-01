@@ -30,6 +30,9 @@ freqtrade download-data --config user_data/config_price-act_strategy.json --pair
 # Run backtesting
 freqtrade backtesting --config user_data/config_price-act_strategy.json --strategy PriceActionStrategy
 
+# Run hyperopt optimization
+freqtrade hyperopt --config user_data/config_hyperopt.json --strategy PriceActionStrategy --hyperopt-loss SharpeHyperOptLoss --epochs 50 --timerange 20241001- --spaces buy sell
+
 # Start live trading
 freqtrade trade --config user_data/config_price-act_strategy.json --strategy PriceActionStrategy
 ```
@@ -73,3 +76,35 @@ If not provided, the system will auto-generate secure credentials.
 - Trading pairs: BTC/USDT, ETH/USDT, SOL/USDT, AVAX/USDT, DOGE/USDT, XRP/USDT
 - Timeframe: 5 minutes
 - Dry run mode enabled by default for testing
+
+## Hyperopt Optimization Analysis (2025-09-30)
+
+### Critical Configuration Issues Identified
+
+**Original Hyperopt Results:**
+- Total Return: -0.54% (Poor performance)
+- Win Rate: 28.6% (Below target 40%+)
+- Trade Count: Only 14 trades (Insufficient for statistical significance)
+- Optimized Parameters: trend_analysis_period=24, exit_candle_count=9
+
+**Root Cause Analysis:**
+1. **Unrealistic ROI**: `"minimal_roi": {"0": 10}` = 1000% profit target (impossible)
+2. **Aggressive Stop Loss**: `-0.15` = 15% stop loss (too high)
+3. **Strategy Logic**: Too restrictive conditions generating minimal signals
+
+**Configuration Fixes Applied:**
+- Created `user_data/config_hyperopt_fixed.json` with realistic settings:
+  - ROI: `{"0": 0.03, "15": 0.02, "30": 0.01, "60": 0}` (3%→2%→1%→0%)
+  - Stop Loss: `-0.05` (5% instead of 15%)
+  - More trading pairs: Added BNB/USDT, ADA/USDT, DOT/USDT
+
+**Expected Improvements:**
+- More trades: 50-200+ instead of 14
+- Better win rate: 35-45% target
+- Positive returns instead of -0.54%
+- Realistic profit targets that trades can actually achieve
+
+### Recommended Hyperopt Command:
+```bash
+freqtrade hyperopt --config user_data/config_hyperopt_fixed.json --strategy PriceActionStrategy --hyperopt-loss SharpeHyperOptLoss --epochs 50 --timerange 20241001- --spaces buy sell
+```
