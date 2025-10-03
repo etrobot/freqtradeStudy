@@ -11,21 +11,21 @@
       "max_open_trades": 3
     },
     "buy": {
-      "mean_multiplier": 1.37,
-      "second_half_max_candle_percentage": 0.36
+      "mean_multiplier": 1.63,
+      "second_half_max_candle_percentage": 1.39
     },
     "sell": {},
     "protection": {},
     "roi": {
-      "0": 0.227,
-      "26": 0.075,
-      "55": 0.039,
-      "155": 0
+      "0": 0.113,
+      "25": 0.079,
+      "45": 0.035,
+      "160": 0
     },
     "stoploss": {
-      "stoploss": -0.331
+      "stoploss": -0.25
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2025-10-03 16:35:06.607663+00:00"
+  "export_time": "2025-10-03 16:42:57.914117+00:00"
 }

@@ -24,7 +24,7 @@ class PriceActionStrategy(IStrategy):
     use_custom_stoploss = False
     trailing_stop = False
     # 固定参数（可被配置覆盖）
-    trend_analysis_period: int = 25
+    trend_analysis_period: int = 30
 
 
     # ======================= 可优化参数 - 用于hyperopt =======================
@@ -108,7 +108,7 @@ class PriceActionStrategy(IStrategy):
             # 分成前后两段
             # 使用可调分界比例将周期切分为前段/后段
             # split_ratio = float(self.split_ratio.value)
-            split_ratio = 0.6
+            split_ratio = 0.5
             mid_point = int(len(period_data) * split_ratio)
             # 约束分界点，避免任一段为空
             mid_point = max(1, min(len(period_data) - 1, mid_point))
@@ -116,9 +116,9 @@ class PriceActionStrategy(IStrategy):
             second_half = period_data.iloc[mid_point:]
 
             # 条件1：最低价在前半段
-            # period_low = period_data['low'].min()
-            # half_min_low = first_half['low'].min()
-            # condition1 = period_low == half_min_low
+            period_low = period_data['low'].min()
+            half_min_low = first_half['low'].min()
+            condition1 = period_low == half_min_low
 
             # 条件2：后半段最长K线 * 因子(百分比) < 前半段K线长度平均值
             second_half_max_candle = second_half['body_length'].max()
@@ -134,7 +134,7 @@ class PriceActionStrategy(IStrategy):
             # condition4 = period_data['body_length'].max() == first_half['body_length'].max()
 
             # 所有条件都满足
-            if condition2 and condition3:
+            if condition1 and condition2 and condition3:
                 result.iloc[i] = True
 
         return result
