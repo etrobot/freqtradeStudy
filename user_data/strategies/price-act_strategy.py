@@ -108,7 +108,7 @@ class PriceActionStrategy(IStrategy):
             # 分成前后两段
             # 使用可调分界比例将周期切分为前段/后段
             # split_ratio = float(self.split_ratio.value)
-            split_ratio = 0.32
+            split_ratio = 0.6
             mid_point = int(len(period_data) * split_ratio)
             # 约束分界点，避免任一段为空
             mid_point = max(1, min(len(period_data) - 1, mid_point))
@@ -116,25 +116,25 @@ class PriceActionStrategy(IStrategy):
             second_half = period_data.iloc[mid_point:]
 
             # 条件1：最低价在前半段
-            period_low = period_data['low'].min()
-            half_min_low = first_half['low'].min()
-            condition1 = period_low == half_min_low
+            # period_low = period_data['low'].min()
+            # half_min_low = first_half['low'].min()
+            # condition1 = period_low == half_min_low
 
-            # 条件2：后半段最长K线 * 因子(百分比) < K线长度平均值
+            # 条件2：后半段最长K线 * 因子(百分比) < 前半段K线长度平均值
             second_half_max_candle = second_half['body_length'].max()
-            period_mean_candle = period_data['body_length'].mean()
+            period_mean_candle = first_half['body_length'].mean()
             factor2 = float(self.second_half_max_candle_percentage.value)
             threshold = period_mean_candle * float(self.mean_multiplier.value)
             condition2 = (second_half_max_candle * factor2) < threshold
 
             # 条件3：最后一根涨幅 > 0（相对上一根收盘）
-            condition3 = bool(dataframe['is_bullish'].iloc[i - 1])
+            condition3 = bool(dataframe['body_length'].iloc[i - 1]==dataframe['body_length'].min())
 
             # 条件4:
-            condition4 = period_data['body_length'].max() == first_half['body_length'].max()
+            # condition4 = period_data['body_length'].max() == first_half['body_length'].max()
 
             # 所有条件都满足
-            if condition1 and condition2 and condition3 and condition4:
+            if condition2 and condition3:
                 result.iloc[i] = True
 
         return result
