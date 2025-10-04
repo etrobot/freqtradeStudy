@@ -29,7 +29,7 @@ class PriceActionStrategy(IStrategy):
     # 添加买入空间的可优化参数
     trend_period = DecimalParameter(10, 50, default=30, space="buy", optimize=True)
     # 前期下跌比例：确保前面有明显下跌
-    decline_ratio = DecimalParameter(0.01, 0.04, default=0.02, space="buy", optimize=True)
+    decline_ratio = DecimalParameter(0.01, 0.06, default=0.02, space="buy", optimize=True)
     # ROI/止损默认值（可被 hyperopt 在 --spaces roi stoploss 下优化）
     minimal_roi = {
         "0": 0.102,
